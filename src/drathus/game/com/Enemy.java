@@ -1,6 +1,6 @@
 package drathus.game.com;
 
-public class Enemy extends Entity {
+public abstract class Enemy extends Entity {
 	public boolean alive = true;
 
 	protected Enemy(Sprite sprite, int x, int y) {
@@ -11,10 +11,5 @@ public class Enemy extends Entity {
 		this.x = x;
 		this.y = y;
 		alive = true;
-	}
-
-	@Override
-	public void collidedWith(Entity other) {
-		//handled by other entity
 	}
 }

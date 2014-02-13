@@ -50,6 +50,7 @@ public class Game {
 	/** Game variables */
 	private Player player;
 	private SolidEntity obstacle;
+	private ZombieEnemy zombie;
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	private ArrayList<Entity> removeList = new ArrayList<Entity>();
 
@@ -136,6 +137,8 @@ public class Game {
 		player.collidedWith(player);
 		obstacle = new SolidEntity(getSprite("obstacle.png"), 100, 200);
 		entities.add(obstacle);
+		zombie = new ZombieEnemy(this, player, getSprite("Zombie.png"), 200, 300);
+		entities.add(zombie);
 	}
 
 	private void gameLoop() {
@@ -232,5 +235,10 @@ public class Game {
 
 	public void removeEntity(Entity entity) {
 		removeList.add(entity);
+	}
+
+	public void notifyDeath() {
+		System.out.println("YOU LOOSE!");
+		gameRunning = false;
 	}
 }

@@ -5,16 +5,16 @@ public class Player extends Entity {
 
 	private static int leftBorder, rightBorder, topBorder, bottomBorder, framesPressed = 0, swap = 7, dir = 1, slow = 16;
 	public float speed = 80; //default speed
-	public static String costumeRefs[] = { "man1_fr1.gif", "man1_fr2.gif", "man1_bk1.gif", "man1_bk2.gif", "man1_lf1.gif", "man1_lf2.gif", "man1_rt1.gif", "man1_rt2.gif" };
-	public static Sprite costumes[] = new Sprite[8]; //down up left right
+	private static String[] costumeRefs = { "man1_fr1.gif", "man1_fr2.gif", "man1_bk1.gif", "man1_bk2.gif", "man1_lf1.gif", "man1_lf2.gif", "man1_rt1.gif", "man1_rt2.gif" };
+	private static Sprite[] costumes = new Sprite[8]; //down up left right
 
 	protected Player(Game game, String ref, int x, int y) {
 		super(game.getSprite(ref), x, y);
 		this.game = game;
 		leftBorder = 0;
-		rightBorder = game.width - super.width;
+		rightBorder = Game.width - super.width;
 		topBorder = 0;
-		bottomBorder = game.height - super.height;
+		bottomBorder = Game.height - super.height;
 		for (int i = 0; i < 8; i++) {
 			costumes[i] = game.getSprite(costumeRefs[i]);
 		}
