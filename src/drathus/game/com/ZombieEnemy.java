@@ -43,7 +43,10 @@ public class ZombieEnemy extends Enemy {
 	public void move(long delta) {
 		dx = dy = 0;
 		if (done) done = false;
-		if (attacking && !done) attack();
+		if (attacking && !done) {
+			attack();
+			return;
+		}
 		if (player.x < x) dx = -speed;
 		else if (player.x > x) dx = speed;
 		if (player.y < y) dy = -speed;
