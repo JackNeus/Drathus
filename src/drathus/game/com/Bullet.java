@@ -52,14 +52,14 @@ public class Bullet extends Entity {
 	 * The end animation of sprites when the bullet is destroyed
 	 */
 	public void endSequence() {
-		if (sequence == 26) {
+		if (sequence == 11) {
 			game.removeEntity(this);
 			return;
 		}
 
-		/** Update animation every three frames */
-		if (sequence % 5 == 0) {
-			sprite = costumes[sequence / 5];
+		/** Update animation every two frames */
+		if (sequence % 2 == 0) {
+			sprite = costumes[sequence / 2];
 		}
 		sequence++;
 	}
