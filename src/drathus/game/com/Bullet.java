@@ -1,21 +1,26 @@
 package drathus.game.com;
 
+import org.lwjgl.input.Keyboard;
+
 public class Bullet extends Entity {
+	private Game game;
 	private boolean hit = false;
-	
-	//We want the bullet to go offscreen before deleting it, or it won't be smooth
-	//There will be a seperate animation of sprites if a bullet hits an object
-	private static int leftBorder = -Game.width;
-	private static int rightBorder = Game.width;
-	private static int topBorder = -Game.height;
-	private static int bottomBorder = Game.height;
-	public float speed = 150;
-	private float dx;
-	private float dy;
-	private static Game game;
-	
-	protected Bullet(String ref, int x, int y) {
-		super(game.getSprite(ref), x, y);
+
+	/** Bounds for the bullet, if goes off screen, destroy */
+	private int leftBorder, rightBorder, topBorder, bottomBorder;
+
+	private int angleDegrees;
+	private int speed = 350;
+
+	public Bullet(Game game, Sprite sprite, float x, float y, int dir) {
+		super(sprite, Math.round(x), Math.round(y));
+		dx = (dir == Keyboard.KEY_A) ? -speed : (dir == Keyboard.KEY_D) ? speed : 0;
+		dy = (dir == Keyboard.KEY_W) ? -speed : (dir == Keyboard.KEY_S) ? speed : 0;
+		angleDegrees = (dir == Keyboard.KEY_A || dir == Keyboard.KEY_D) ? 0 : 90;
+		leftBorder = topBorder = 0;
+		rightBorder = Game.width - width;
+		bottomBorder = Game.height - height;
+		this.game = game;
 	}
 
 	public void reinitialize(int x, int y) { //reuse this entity
@@ -23,17 +28,36 @@ public class Bullet extends Entity {
 		this.y = y;
 		hit = false;
 	}
-	
-	public void move(long delta, float angle) {
-		dx = (float) (speed * StrictMath.cos(angle));
-		dy = (float) (speed * StrictMath.sin(angle));
-		move(delta);
-		if (x < leftBorder || x > rightBorder || y < topBorder || y > bottomBorder) game.removeEntity(this);
+
+	@Override
+	public void move(long delta) {
+		super.move(delta);
+		if (x < leftBorder || x > rightBorder || y < topBorder || y > bottomBorder) {
+			game.removeEntity(this);
+		}
+	}
+
+	/**
+	 * The end animation of sprites when the bullet is destroyed
+	 */
+	public void endSequence() {
+	}
+
+	@Override
+	public void draw() {
+		super.draw(angleDegrees);
 	}
 
 	@Override
 	public void collidedWith(Entity other) {
 		if (hit) return;
-		hit = true;
+		if (other instanceof Enemy) {
+			hit = true;
+			game.removeEntity(this);
+			game.removeEntity(other);
+		} else if (other instanceof SolidEntity) {
+			hit = true;
+			game.removeEntity(this);
+		}
 	}
 }

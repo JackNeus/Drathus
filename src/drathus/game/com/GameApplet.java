@@ -3,18 +3,24 @@ package drathus.game.com;
 import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 
-public class GameApplet extends Applet{
+public class GameApplet extends Applet {
+	/**
+	 * Gets rid of stupid yellow warning
+	 */
+	private static final long serialVersionUID = 1L;
 	Canvas display_parent;
 	Thread gameThread;
 	Game game;
-	
+
 	//Will only work if Canvas is created
 	//Starts LWJGL Display and game loop in additional thread
 	public void startLWJGL() {
 		gameThread = new Thread() {
+			@Override
 			public void run() {
 				try {
 					Display.setParent(display_parent);
@@ -27,7 +33,7 @@ public class GameApplet extends Applet{
 		};
 		gameThread.start();
 	}
-	
+
 	/*Tell game loop to stop running*/
 	private void stopLWJGL() {
 		Game.gameRunning = false;
@@ -37,29 +43,41 @@ public class GameApplet extends Applet{
 			e.printStackTrace();
 		}
 	}
-	
+
+	@Override
 	public void start() {
-		
+
 	}
-	
+
+	@Override
 	public void stop() {
-		
+
 	}
-	
+
+	@Override
 	public void destroy() {
 		remove(display_parent);
 		super.destroy();
 		System.out.println("Clear up");
 	}
-	
+
+	@Override
 	public void init() {
 		setLayout(new BorderLayout());
 		try {
 			display_parent = new Canvas() {
+				/**
+				 * Gets rid of stupid warning
+				 */
+				private static final long serialVersionUID = 1L;
+
+				@Override
 				public void addNotify() {
 					super.addNotify();
 					startLWJGL();
 				}
+
+				@Override
 				public void removeNotify() {
 					stopLWJGL();
 					super.removeNotify();

@@ -42,6 +42,10 @@ public abstract class Entity {
 		sprite.draw((int) x, (int) y);
 	}
 
+	public void draw(int angle) {
+		sprite.draw((int) x, (int) y, angle);
+	}
+
 	public int getX() {
 		return (int) x;
 	}
@@ -55,6 +59,6 @@ public abstract class Entity {
 		him.setBounds((int) other.x, (int) other.y, other.sprite.getWidth(), other.sprite.getHeight());
 		return me.intersects(him);
 	}
-	
+
 	public abstract void collidedWith(Entity other);
 }
