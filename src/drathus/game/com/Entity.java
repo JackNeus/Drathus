@@ -53,6 +53,13 @@ public abstract class Entity {
 	public int getY() {
 		return (int) y;
 	}
+	
+	public int getWidth(){
+		return width;
+	}
+	public int getHeight(){
+		return height;
+	}
 
 	public boolean collidesWith(Entity other) {
 		me.setBounds((int) x, (int) y, sprite.getWidth(), sprite.getHeight());
