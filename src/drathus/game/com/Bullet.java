@@ -4,7 +4,11 @@ import org.lwjgl.input.Keyboard;
 
 public class Bullet extends Entity {
 	private Game game;
-	private boolean hit = false;
+	private boolean hit, done;
+	private int sequence;
+
+	private static String[] costumeRefs = { "Bullet_1.png", "Bullet_2.png", "Bullet_3.png", "Bullet_4.png", "Bullet_5.png", "Bullet_6.png" };
+	private static Sprite[] costumes = new Sprite[6];
 
 	/** Bounds for the bullet, if goes off screen, destroy */
 	private int leftBorder, rightBorder, topBorder, bottomBorder;
@@ -21,6 +25,9 @@ public class Bullet extends Entity {
 		rightBorder = Game.width - width;
 		bottomBorder = Game.height - height;
 		this.game = game;
+		for (int i = 0; i < 6; i++) {
+			costumes[i] = game.getSprite(costumeRefs[i]);
+		}
 	}
 
 	public void reinitialize(int x, int y) { //reuse this entity
@@ -31,6 +38,10 @@ public class Bullet extends Entity {
 
 	@Override
 	public void move(long delta) {
+		if (hit) {
+			endSequence();
+			return;
+		}
 		super.move(delta);
 		if (x < leftBorder || x > rightBorder || y < topBorder || y > bottomBorder) {
 			game.removeEntity(this);
@@ -41,6 +52,16 @@ public class Bullet extends Entity {
 	 * The end animation of sprites when the bullet is destroyed
 	 */
 	public void endSequence() {
+		if (sequence == 26) {
+			game.removeEntity(this);
+			return;
+		}
+
+		/** Update animation every three frames */
+		if (sequence % 5 == 0) {
+			sprite = costumes[sequence / 5];
+		}
+		sequence++;
 	}
 
 	@Override
@@ -53,11 +74,9 @@ public class Bullet extends Entity {
 		if (hit) return;
 		if (other instanceof Enemy) {
 			hit = true;
-			game.removeEntity(this);
 			game.removeEntity(other);
 		} else if (other instanceof SolidEntity) {
 			hit = true;
-			game.removeEntity(this);
 		}
 	}
 }

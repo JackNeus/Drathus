@@ -11,14 +11,6 @@ public class ZombieEnemy extends Enemy {
 	private static Sprite[] costumes = new Sprite[6];
 	private static Sprite original;
 
-	protected ZombieEnemy(Sprite sprite, int x, int y) {
-		super(sprite, x, y);
-		attacking = false;
-		done = false;
-
-		System.out.println((original == null));
-	}
-
 	protected ZombieEnemy(Game game, Player player, Sprite sprite, int x, int y) {
 		super(sprite, x, y);
 		this.player = player;
@@ -68,7 +60,7 @@ public class ZombieEnemy extends Enemy {
 		}
 
 		/**
-		 * Update animation every three frames
+		 * Update animation every five frames
 		 */
 		if (sequence % 5 == 0) {
 			sprite = costumes[sequence / 5];
