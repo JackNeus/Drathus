@@ -53,6 +53,8 @@ public class Game {
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	private ArrayList<Entity> removeList = new ArrayList<Entity>();
 
+	/** Map/Background variables */
+	private Map map;
 	private TextureLoader textureLoader;
 
 	public Game(boolean fullscreen) {
@@ -120,6 +122,7 @@ public class Game {
 	private void startGame() {
 		entities.clear();
 		initEntities();
+		initMap();
 	}
 
 	private void initEntities() {
@@ -138,6 +141,10 @@ public class Game {
 		entities.add(obstacle);
 	}
 
+	private void initMap() {
+		map = new Map("TestMap.tmx");
+	}
+	
 	private void gameLoop() {
 		while (Game.gameRunning) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -232,5 +239,10 @@ public class Game {
 
 	public void removeEntity(Entity entity) {
 		removeList.add(entity);
+	}
+
+	public void notifyDeath() {
+		System.out.println("YOU LOOSE!");
+		gameRunning = false;
 	}
 }
