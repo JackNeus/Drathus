@@ -21,6 +21,8 @@ public class Map {
 	private int tileWidth;
 	private int tileHeight;
 	
+	public Tile[][] mapTiles;
+	
 	ArrayList<TileSet> tilesets = new ArrayList<TileSet>();
 	
 	public void readData(){
@@ -32,13 +34,13 @@ public class Map {
 			
 			doc.getDocumentElement().normalize();
 			
-			System.out.println("Root Element: " + doc.getDocumentElement().getNodeName());
+			//System.out.println("Root Element: " + doc.getDocumentElement().getNodeName());
 			Element map = doc.getDocumentElement();
 			mapWidth = Integer.parseInt(map.getAttribute("width"));
 			mapHeight = Integer.parseInt(map.getAttribute("height"));
 			tileWidth = Integer.parseInt(map.getAttribute("tilewidth"));
 			tileHeight = Integer.parseInt(map.getAttribute("tileheight"));
-
+			
 			NodeList tileSetTags = doc.getElementsByTagName("tileset"), imageTags;
 			
 			for(int i = 0; i < tileSetTags.getLength(); i++){
@@ -55,11 +57,53 @@ public class Map {
 				tilesets.add(new TileSet(firstGid, tilesetName, tilesetTileWidth, tilesetTileHeight, tilesetImagePath, imageWidth, imageHeight));
 			}			
 			
+			mapTiles = new Tile[mapWidth][];
+			for(int i = 0; i < mapWidth; i++) mapTiles[i] = new Tile[mapHeight];
+			
+			NodeList layers = doc.getElementsByTagName("layers"), tiles;
+			for(int i = 0; i < layers.getLength(); i++){
+				if(i > 0) break; //TEMPORARY
+				Element currLayer = (Element) layers.item(i);
+				
+				int width = Integer.parseInt(currLayer.getAttribute("width"));
+				int height = Integer.parseInt(currLayer.getAttribute("height"));
+				
+				tiles = currLayer.getElementsByTagName("tile");
+	
+				for(int j = 0; j < tiles.getLength(); j++){
+					Element currTile = (Element) tiles.item(j);
+					int x = j % mapWidth, y = j / mapWidth;
+					int gid = Integer.parseInt(currTile.getAttribute("gid"));
+					
+					if(gid == 0) continue; //Better way to handle this?
+					
+					TileSet currTileSet = null;
+					for(int k = 0; k < tilesets.size(); k++){ //Finds tileset which gid belongs to
+						currTileSet = tilesets.get(k);
+						if(gid >= currTileSet.firstgid && gid <= currTileSet.lastgid) break;
+					}
+					if(currTileSet == null) System.out.println("Invalid gid");
+					
+					int destX = x * tileWidth, destY = y * tileWidth;
+					gid -= currTileSet.firstgid - 1;
+					int srcY = (int) Math.ceil(gid/currTileSet.tileAmountWidth) - 1;
+					int srcX = gid - (currTileSet.tileAmountWidth * y) - 1;
+					mapTiles[x][y] = new Tile(game, currTileSet.source, destX, destY, srcX, srcY, tileWidth, tileHeight);
+				}
+			}
 			
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}
+	
+	public int getTilesAcross(){
+		return mapWidth / tileWidth;
+	}
+	public int getTilesDown(){
+		return mapHeight / tileHeight;
+	}
+	
 	
 	public Map(String filePath, Game game){
 		this.filePath = filePath;

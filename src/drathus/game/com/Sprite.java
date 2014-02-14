@@ -20,7 +20,6 @@ public class Sprite {
 	
 	public Sprite(TextureLoader loader, String ref) {	
 		try {
-			System.out.println(ref);
 			texture = loader.getTexture("res/" + ref);
 			width = texture.getImageWidth();
 			height = texture.getImageHeight();

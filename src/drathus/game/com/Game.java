@@ -121,16 +121,16 @@ public class Game {
 
 	private void startGame() {
 		entities.clear();
-		initEntities();
 		initMap();
+		initEntities();
 	}
 
 	private void initEntities() {
-		for (int i = 0; i < (width / 100) + 1; i++) {
-			for (int j = 0; j < (height / 100) + 1; j++) {
-				Stage tile = new Stage(this, "grass.png", i * 100, j * 100);
+		for (int i = 0; i < map.getTilesAcross() + 1; i++) {
+			for (int j = 0; j < map.getTilesDown() + 1; j++) {
+				//Stage tile = new Stage(this, "grass.png", i * 100, j * 100);
 				//tile.collidedWith(tile);
-				entities.add(tile);
+				entities.add(map.mapTiles[i][j]);
 			}
 		}
 		player = new Player(this, "man1_fr1.gif", 400, 300);

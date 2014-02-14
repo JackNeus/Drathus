@@ -14,5 +14,8 @@ public class Tile extends Entity{
 		
 	}
 	
+	public void move(long delta){
+		System.out.println("Whas the problem officer?");
+	}
 	
 }
