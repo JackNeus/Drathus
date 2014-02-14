@@ -142,7 +142,8 @@ public class Game {
 	}
 
 	private void initMap() {
-		map = new Map("TestMap.tmx");
+		map = new Map("res\\TestMap.tmx");
+		map.readData();
 	}
 	
 	private void gameLoop() {
