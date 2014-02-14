@@ -15,16 +15,17 @@ import java.io.IOException;
 public class Sprite {
 	private Texture texture;
 	private int width, height;
-	private int tWidth, tHeight;
+	private float tWidth, tHeight;
 	private int x, y; //Tells location of sprite on texture
 	
-	public Sprite(TextureLoader loader, String ref) {
+	public Sprite(TextureLoader loader, String ref) {	
 		try {
+			System.out.println(ref);
 			texture = loader.getTexture("res/" + ref);
 			width = texture.getImageWidth();
 			height = texture.getImageHeight();
-			tWidth = (int) texture.getHeight();
-			tHeight = (int) texture.getWidth();
+			tWidth = texture.getHeight();
+			tHeight = texture.getWidth();
 			x = 0;
 			y = 0;
 		} catch (IOException ioe) {
@@ -37,8 +38,8 @@ public class Sprite {
 			texture = loader.getTexture("res/" + ref);
 			this.width = (int) (texture.getWidth() / texture.getImageWidth() * width);
 			this.height = (int) (texture.getHeight() / texture.getImageHeight() * height);
-			tWidth = width;
-			tHeight = height;
+			tWidth = width * texture.getWidth();
+			tHeight = height * texture.getHeight();
 			x = xpos;
 			y = ypos;
 		} catch (IOException ioe) {
@@ -61,20 +62,19 @@ public class Sprite {
 		texture.bind();
 
 		glTranslatef(xp, yp, 0);
-
+		//System.out.println(x + " " + y + " " + width + " " + height + " " + tWidth + " " + tHeight);
 		glBegin(GL_QUADS);
 		{
-			System.out.println(x + " " + y);
 			glTexCoord2f(x, y);
 			glVertex2f(0, 0);
 
-			glTexCoord2f(x, y + tHeight);
+			glTexCoord2f(x, tHeight);
 			glVertex2f(0, height);
 
-			glTexCoord2f(x + tWidth, y + tHeight);
+			glTexCoord2f(tWidth, tHeight);
 			glVertex2f(width, height);
 
-			glTexCoord2f(x + tWidth, y);
+			glTexCoord2f(tWidth, y);
 			glVertex2f(width, 0);
 		}
 		glEnd();
