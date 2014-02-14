@@ -60,7 +60,8 @@ public class Map {
 			mapTiles = new Tile[mapWidth][];
 			for(int i = 0; i < mapWidth; i++) mapTiles[i] = new Tile[mapHeight];
 			
-			NodeList layers = doc.getElementsByTagName("layers"), tiles;
+			NodeList layers = doc.getElementsByTagName("layer"), tiles;
+			
 			for(int i = 0; i < layers.getLength(); i++){
 				if(i > 0) break; //TEMPORARY
 				Element currLayer = (Element) layers.item(i);
@@ -69,11 +70,12 @@ public class Map {
 				int height = Integer.parseInt(currLayer.getAttribute("height"));
 				
 				tiles = currLayer.getElementsByTagName("tile");
-	
+				
 				for(int j = 0; j < tiles.getLength(); j++){
 					Element currTile = (Element) tiles.item(j);
 					int x = j % mapWidth, y = j / mapWidth;
-					int gid = Integer.parseInt(currTile.getAttribute("gid"));
+					
+					double gid = Integer.parseInt(currTile.getAttribute("gid"));
 					
 					if(gid == 0) continue; //Better way to handle this?
 					
@@ -86,8 +88,15 @@ public class Map {
 					
 					int destX = x * tileWidth, destY = y * tileWidth;
 					gid -= currTileSet.firstgid - 1;
-					int srcY = (int) Math.ceil(gid/currTileSet.tileAmountWidth) - 1;
-					int srcX = gid - (currTileSet.tileAmountWidth * y) - 1;
+					double origGid = gid;
+					int srcY = (int) (gid / currTileSet.tileAmountWidth);
+					gid %= currTileSet.tileAmountWidth;
+					int srcX = (int) (gid - 1);
+					srcY *= tileHeight;
+					srcX *= tileWidth;
+					//srcY = currTileSet.imageHeight - srcY;
+					//int srcX = (int) gid - (currTileSet.tileAmountWidth * srcY) - 1;
+					//System.out.println(origGid + " " + srcX + " " + srcY + " " + currTileSet.tileAmountWidth);
 					mapTiles[x][y] = new Tile(game, currTileSet.source, destX, destY, srcX, srcY, tileWidth, tileHeight);
 				}
 			}
@@ -98,10 +107,10 @@ public class Map {
 	}
 	
 	public int getTilesAcross(){
-		return mapWidth / tileWidth;
+		return mapWidth;
 	}
 	public int getTilesDown(){
-		return mapHeight / tileHeight;
+		return mapHeight;
 	}
 	
 	

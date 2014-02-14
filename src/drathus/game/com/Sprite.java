@@ -14,19 +14,18 @@ import java.io.IOException;
 
 public class Sprite {
 	private Texture texture;
-	private int width, height;
-	private float tWidth, tHeight;
-	private int x, y; //Tells location of sprite on texture
+	private float width, height;
+	private float x1, y1, x2, y2; //Tells location of sprite on texture
 	
 	public Sprite(TextureLoader loader, String ref) {	
 		try {
 			texture = loader.getTexture("res/" + ref);
 			width = texture.getImageWidth();
 			height = texture.getImageHeight();
-			tWidth = texture.getHeight();
-			tHeight = texture.getWidth();
-			x = 0;
-			y = 0;
+			x2 = texture.getHeight();
+			y2 = texture.getWidth();
+			x1 = 0;
+			y1 = 0;
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			System.exit(-1);
@@ -35,12 +34,14 @@ public class Sprite {
 	public Sprite(TextureLoader loader, String ref, int xpos, int ypos, int width, int height) {
 		try {
 			texture = loader.getTexture("res/" + ref);
-			this.width = (int) (texture.getWidth() / texture.getImageWidth() * width);
-			this.height = (int) (texture.getHeight() / texture.getImageHeight() * height);
-			tWidth = width * texture.getWidth();
-			tHeight = height * texture.getHeight();
-			x = xpos;
-			y = ypos;
+			this.width = width;
+			this.height = height;
+			x1 = 1.0f * xpos / texture.getImageWidth();
+			y1 = 1.0f * ypos / texture.getImageHeight();
+			x2 = x1 + 1.0f * width / texture.getImageWidth();
+			y2 = y1 + 1.0f * height / texture.getImageHeight();
+			System.out.println(texture.getImageWidth() + " " + texture.getImageHeight());
+			System.out.println(x1 + " "+ x2 + " " + y1 + " "+ y2);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			System.exit(-1);
@@ -59,21 +60,20 @@ public class Sprite {
 		glPushMatrix();
 
 		texture.bind();
-
+		
 		glTranslatef(xp, yp, 0);
-		//System.out.println(x + " " + y + " " + width + " " + height + " " + tWidth + " " + tHeight);
 		glBegin(GL_QUADS);
 		{
-			glTexCoord2f(x, y);
+			glTexCoord2f(x1, y1);
 			glVertex2f(0, 0);
 
-			glTexCoord2f(x, tHeight);
+			glTexCoord2f(x1, y2);
 			glVertex2f(0, height);
 
-			glTexCoord2f(tWidth, tHeight);
+			glTexCoord2f(x2, y2);
 			glVertex2f(width, height);
 
-			glTexCoord2f(tWidth, y);
+			glTexCoord2f(x2, y1);
 			glVertex2f(width, 0);
 		}
 		glEnd();
@@ -87,7 +87,7 @@ public class Sprite {
 		texture.bind();
 
 		glTranslatef(x, y, 0);
-		glRotatef(angle, 0f, 0f, 1f);
+		//glRotatef(angle, 0f, 0f, 1f);
 
 		glBegin(GL_QUADS);
 		{

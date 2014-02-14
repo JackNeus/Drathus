@@ -4,6 +4,7 @@ public class Tile extends Entity{
 	private Game game;
 	
 	protected Tile(Game game, String ref, int x, int y, int texX, int texY, int width, int height) {
+		//super(game.getSprite(ref), x, y);
 		super(game.getSprite(ref, texX, texY, width, height), x, y);
 		this.game = game;
 	}
@@ -15,7 +16,6 @@ public class Tile extends Entity{
 	}
 	
 	public void move(long delta){
-		System.out.println("Whas the problem officer?");
 	}
 	
 }

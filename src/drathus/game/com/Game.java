@@ -121,18 +121,20 @@ public class Game {
 
 	private void startGame() {
 		entities.clear();
-		initMap();
 		initEntities();
 	}
 
 	private void initEntities() {
-		for (int i = 0; i < map.getTilesAcross() + 1; i++) {
-			for (int j = 0; j < map.getTilesDown() + 1; j++) {
+		/*initMap();
+		for (int i = 0; i < map.getTilesAcross(); i++) {
+			for (int j = 0; j < map.getTilesDown(); j++) {
 				//Stage tile = new Stage(this, "grass.png", i * 100, j * 100);
 				//tile.collidedWith(tile);
 				entities.add(map.mapTiles[i][j]);
 			}
-		}
+		}*/
+		entities.add(new Tile(this, "grass-tiles-2-small.png", 50, 50, 32, 0, 32, 32));
+		//entities.add(new Tile(this, "grass-tiles-2-small.png", 82, 50, 128, 0, 32, 32));
 		player = new Player(this, "man1_fr1.gif", 400, 300);
 		player.speed = 200;
 		entities.add(player);
@@ -142,7 +144,7 @@ public class Game {
 	}
 
 	private void initMap() {
-		map = new Map("res\\TestMap.tmx", this);
+		map = new Map("res/TestMap.tmx", this);
 		map.readData();
 	}
 	
@@ -177,7 +179,7 @@ public class Game {
 		for (Entity entity : entities) {
 			entity.move(delta);
 		}
-
+			
 		for (Entity entity : entities) {
 			entity.draw();
 		}
