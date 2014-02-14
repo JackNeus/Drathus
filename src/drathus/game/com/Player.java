@@ -1,16 +1,16 @@
 package drathus.game.com;
 
 public class Player extends Entity {
-	private Game game;
 
 	private static int leftBorder, rightBorder, topBorder, bottomBorder, framesPressed = 0, swap = 7, dir = 1, slow = 16;
 	public float speed = 80; //default speed
 	private static String[] costumeRefs = { "man1_fr1.gif", "man1_fr2.gif", "man1_bk1.gif", "man1_bk2.gif", "man1_lf1.gif", "man1_lf2.gif", "man1_rt1.gif", "man1_rt2.gif" };
 	private static Sprite[] costumes = new Sprite[8]; //down up left right
 
+	private int shotDirection, frameCount;
+
 	protected Player(Game game, String ref, int x, int y) {
 		super(game.getSprite(ref), x, y);
-		this.game = game;
 		leftBorder = 0;
 		rightBorder = Game.width - super.width;
 		topBorder = 0;
@@ -18,10 +18,24 @@ public class Player extends Entity {
 		for (int i = 0; i < 8; i++) {
 			costumes[i] = game.getSprite(costumeRefs[i]);
 		}
+		shotDirection = -1;
+		frameCount = 0;
+	}
+
+	public void setDirection(int dir) {
+		shotDirection = dir;
+		this.dir = shotDirection;
 	}
 
 	@Override
 	public void move(long delta) {
+		if (shotDirection != -1) {
+			frameCount++;
+			if (frameCount > 5) {
+				shotDirection = -1;
+				frameCount = 0;
+			}
+		}
 		slow = (int) (speed * 0.2);
 		swap = (int) (slow * 0.5 - 1);
 		if (dx == 0 && dy == 0) {
@@ -29,35 +43,43 @@ public class Player extends Entity {
 			framesPressed = 0;
 		} else {
 			if (dx > 0) {
-				if (dir == 3) framesPressed = (framesPressed + 1) % slow;
+				if (dir == 3 || dir == shotDirection) framesPressed = (framesPressed + 1) % slow;
 				else {
-					dir = 3;
+					if (shotDirection == -1) dir = 3;
+					else dir = shotDirection;
 					framesPressed = 0;
 				}
-				if (framesPressed > swap) sprite = costumes[7];
-				else sprite = costumes[6];
+				if (framesPressed > swap) {
+					sprite = costumes[dir * 2 + 1];
+				} else sprite = costumes[dir * 2];
 			} else if (dx < 0) {
-				if (dir == 2) framesPressed = (framesPressed + 1) % slow;
+				if (dir == 2 || dir == shotDirection) framesPressed = (framesPressed + 1) % slow;
 				else {
-					dir = 2;
+					if (shotDirection == -1) dir = 2;
+					else dir = shotDirection;
 					framesPressed = 0;
 				}
-				if (framesPressed > swap) sprite = costumes[5];
-				else sprite = costumes[4];
+				if (framesPressed > swap) sprite = costumes[dir * 2 + 1];
+				else sprite = costumes[dir * 2];
 			} else {
 				if (dy > 0) {
-					if (dir == 0) framesPressed = (framesPressed + 1) % slow;
-					else dir = framesPressed = 0;
-					if (framesPressed > swap) sprite = costumes[1];
-					else sprite = costumes[0];
-				} else {
-					if (dir == 1) framesPressed = (framesPressed + 1) % slow;
+					if (dir == 0 || dir == shotDirection) framesPressed = (framesPressed + 1) % slow;
 					else {
-						dir = 1;
+						if (shotDirection == -1) dir = 0;
+						else dir = shotDirection;
 						framesPressed = 0;
 					}
-					if (framesPressed > swap) sprite = costumes[3];
-					else sprite = costumes[2];
+					if (framesPressed > swap) sprite = costumes[dir * 2 + 1];
+					else sprite = costumes[dir * 2];
+				} else {
+					if (dir == 1 || dir == shotDirection) framesPressed = (framesPressed + 1) % slow;
+					else {
+						if (shotDirection == -1) dir = 1;
+						else dir = shotDirection;
+						framesPressed = 0;
+					}
+					if (framesPressed > swap) sprite = costumes[dir * 2 + 1];
+					else sprite = costumes[dir * 2];
 				}
 			}
 		}

@@ -199,15 +199,19 @@ public class Game {
 		if (Keyboard.isKeyDown(Keyboard.KEY_A) && System.currentTimeMillis() - lastShot >= shotPeriod) {
 			lastShot = System.currentTimeMillis();
 			entities.add(new Bullet(this, getSprite("Bullet.png"), player.x + player.width, player.y + player.height / 2, Keyboard.KEY_A));
+			player.setDirection(2);
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_S) && System.currentTimeMillis() - lastShot >= shotPeriod) {
 			lastShot = System.currentTimeMillis();
 			entities.add(new Bullet(this, getSprite("Bullet.png"), player.x + player.width, player.y + player.height / 2, Keyboard.KEY_S));
+			player.setDirection(0);
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_D) && System.currentTimeMillis() - lastShot >= shotPeriod) {
 			lastShot = System.currentTimeMillis();
 			entities.add(new Bullet(this, getSprite("Bullet.png"), player.x + player.width, player.y + player.height / 2, Keyboard.KEY_D));
+			player.setDirection(3);
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_W) && System.currentTimeMillis() - lastShot >= shotPeriod) {
 			lastShot = System.currentTimeMillis();
 			entities.add(new Bullet(this, getSprite("Bullet.png"), player.x + player.width, player.y + player.height / 2, Keyboard.KEY_W));
+			player.setDirection(1);
 		}
 
 		if ((Display.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) && isApplication) {

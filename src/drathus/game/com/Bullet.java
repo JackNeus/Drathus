@@ -4,7 +4,7 @@ import org.lwjgl.input.Keyboard;
 
 public class Bullet extends Entity {
 	private Game game;
-	private boolean hit, done;
+	private boolean hit;
 	private int sequence;
 
 	private static String[] costumeRefs = { "Bullet_1.png", "Bullet_2.png", "Bullet_3.png", "Bullet_4.png", "Bullet_5.png", "Bullet_6.png" };
