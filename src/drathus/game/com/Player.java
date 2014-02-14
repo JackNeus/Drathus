@@ -93,5 +93,16 @@ public class Player extends Entity {
 
 	@Override
 	public void collidedWith(Entity other) {
+		if (other instanceof SolidEntity) {
+			int diffx = (int) Math.abs((x + width / 2) - (other.x + other.width / 2));
+			int diffy = (int) Math.abs((y + height / 2) - (other.y + other.height / 2));
+			if (diffx >= diffy) {
+				if (dx > 0) x = other.x - width;
+				else if (dx < 0) x = other.x + other.width;
+			} else {
+				if (dy > 0) y = other.y - height;
+				else if (dy < 0) y = other.y + other.height;
+			}
+		}
 	}
 }

@@ -29,6 +29,17 @@ public class ZombieEnemy extends Enemy {
 				else attacking = true;
 			}
 		}
+		if (other instanceof SolidEntity) {
+			int diffx = (int) Math.abs((x + width / 2) - (other.x + other.width / 2));
+			int diffy = (int) Math.abs((y + height / 2) - (other.y + other.height / 2));
+			if (diffx >= diffy) {
+				if (dx > 0) x = other.x - width;
+				else if (dx < 0) x = other.x + other.width;
+			} else {
+				if (dy > 0) y = other.y - height;
+				else if (dy < 0) y = other.y + other.height;
+			}
+		}
 	}
 
 	@Override
@@ -39,11 +50,18 @@ public class ZombieEnemy extends Enemy {
 			attack();
 			return;
 		}
+
 		if (player.x < x) dx = -speed;
 		else if (player.x > x) dx = speed;
 		if (player.y < y) dy = -speed;
 		else if (player.y > y) dy = speed;
 		super.move(delta);
+	}
+
+	public void repulse(SolidEntity obstacle) {
+		Vector2 repulsion = Vector2.getForce(x + width / 2, y + height / 2, obstacle);
+		dx += repulsion.x;
+		dy += repulsion.y;
 	}
 
 	/**

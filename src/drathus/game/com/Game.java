@@ -245,4 +245,8 @@ public class Game {
 		System.out.println("YOU LOOSE!");
 		gameRunning = false;
 	}
+
+	public SolidEntity getObstacle() {
+		return obstacle;
+	}
 }
