@@ -24,7 +24,7 @@ public class Player extends Entity {
 
 	public void setDirection(int dir) {
 		shotDirection = dir;
-		this.dir = shotDirection;
+		Player.dir = shotDirection;
 	}
 
 	@Override
