@@ -1,6 +1,8 @@
 package drathus.game.com;
 
-public class TileSet {
+public class TileSet{
+	public Sprite sprite;
+	
 	public String name;
 	public String source;
 

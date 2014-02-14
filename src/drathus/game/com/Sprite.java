@@ -15,18 +15,33 @@ import java.io.IOException;
 public class Sprite {
 	private Texture texture;
 	private int width, height;
-
+	private int x, y; //Tells location of sprite on texture
+	
 	public Sprite(TextureLoader loader, String ref) {
 		try {
 			texture = loader.getTexture("res/" + ref);
 			width = texture.getImageWidth();
 			height = texture.getImageHeight();
+			x = 0;
+			y = 0;
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			System.exit(-1);
 		}
 	}
-
+	public Sprite(TextureLoader loader, String ref, int xpos, int ypos, int width, int height) {
+		try {
+			texture = loader.getTexture("res/" + ref);
+			this.width = width;
+			this.height = height;
+			x = xpos;
+			y = ypos;
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			System.exit(-1);
+		}
+	}
+	
 	public int getWidth() {
 		return texture.getImageWidth();
 	}
@@ -35,25 +50,26 @@ public class Sprite {
 		return texture.getImageHeight();
 	}
 
-	public void draw(int x, int y) {
+	public void draw(int xp, int yp) {
 		glPushMatrix();
 
 		texture.bind();
 
-		glTranslatef(x, y, 0);
+		glTranslatef(xp, yp, 0);
 
 		glBegin(GL_QUADS);
 		{
-			glTexCoord2f(0, 0);
+			//System.out.println(width + " " + height);
+			glTexCoord2f(x, y);
 			glVertex2f(0, 0);
 
-			glTexCoord2f(0, texture.getHeight());
+			glTexCoord2f(x, y + height);
 			glVertex2f(0, height);
 
-			glTexCoord2f(texture.getWidth(), texture.getHeight());
+			glTexCoord2f(x + width, y + height);
 			glVertex2f(width, height);
 
-			glTexCoord2f(texture.getWidth(), 0);
+			glTexCoord2f(x + width, y);
 			glVertex2f(width, 0);
 		}
 		glEnd();

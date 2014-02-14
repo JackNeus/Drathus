@@ -142,7 +142,7 @@ public class Game {
 	}
 
 	private void initMap() {
-		map = new Map("res\\TestMap.tmx");
+		map = new Map("res\\TestMap.tmx", this);
 		map.readData();
 	}
 	
@@ -232,6 +232,9 @@ public class Game {
 
 	public Sprite getSprite(String ref) {
 		return new Sprite(textureLoader, ref);
+	}
+	public Sprite getSprite(String ref, int xpos, int ypos, int width, int height) {
+		return new Sprite(textureLoader, ref, xpos, ypos, width, height);
 	}
 
 	public Player getPlayer() {

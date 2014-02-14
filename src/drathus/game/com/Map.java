@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.io.File;
 
 public class Map {
+	private Game game;
+	
 	private String filePath;
 	
 	private int mapWidth;
@@ -19,7 +21,7 @@ public class Map {
 	private int tileWidth;
 	private int tileHeight;
 	
-	ArrayList<TileSet> tilesets;
+	ArrayList<TileSet> tilesets = new ArrayList<TileSet>();
 	
 	public void readData(){
 		try{
@@ -37,30 +39,30 @@ public class Map {
 			tileWidth = Integer.parseInt(map.getAttribute("tilewidth"));
 			tileHeight = Integer.parseInt(map.getAttribute("tileheight"));
 
-			NodeList tileSetTags = doc.getElementsByTagName("tileset");
+			NodeList tileSetTags = doc.getElementsByTagName("tileset"), imageTags;
 			
 			for(int i = 0; i < tileSetTags.getLength(); i++){
 				Element curr = (Element) tileSetTags.item(i);
-				int imageWidth = Integer.parseInt(curr.getAttribute("width"));
-				int imageHeight = Integer.parseInt(curr.getAttribute("height"));
-				int firstGid = Integer.parseInt(curr.getAttribute("firstgid"));
-				String tilesetName = curr.getAttribute("tileset");
 				int tilesetTileWidth = Integer.parseInt(curr.getAttribute("tilewidth"));
 				int tilesetTileHeight = Integer.parseInt(curr.getAttribute("tileheight"));
-				String tilesetImagePath = curr.getAttribute("source");
+				int firstGid = Integer.parseInt(curr.getAttribute("firstgid"));
+				String tilesetName = curr.getAttribute("name");
+				imageTags = curr.getElementsByTagName("image");
+				Element image = (Element) imageTags.item(0);
+				int imageWidth = Integer.parseInt(image.getAttribute("width"));
+				int imageHeight = Integer.parseInt(image.getAttribute("height"));
+				String tilesetImagePath = image.getAttribute("source");
 				tilesets.add(new TileSet(firstGid, tilesetName, tilesetTileWidth, tilesetTileHeight, tilesetImagePath, imageWidth, imageHeight));
-			}
+			}			
+			
 			
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}
 	
-	public void loadTilesets(){
-		
-	}
-	
-	public Map(String filePath){
+	public Map(String filePath, Game game){
 		this.filePath = filePath;
+		this.game = game;
 	}
 }
