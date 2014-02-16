@@ -4,12 +4,13 @@ public class ZombieEnemy extends Enemy {
 	/** Ton of variables */
 	private Game game;
 	private Player player;
-	private boolean attacking, done;
+	private boolean attacking, done, intersecting;
 	private int sequence;
 	private static int speed = 80;
 	private static String[] costumeRefs = { "ZKill_1.png", "ZKill_2.png", "ZKill_3.png", "ZKill_4.png", "ZKill_5.png", "ZKill_6.png" };
 	private static Sprite[] costumes = new Sprite[6];
 	private static Sprite original;
+	private Vector2 dir;
 
 	protected ZombieEnemy(Game game, Player player, Sprite sprite, int x, int y) {
 		super(sprite, x, y);
@@ -19,6 +20,7 @@ public class ZombieEnemy extends Enemy {
 			costumes[i] = game.getSprite(costumeRefs[i]);
 		}
 		original = sprite;
+		dir = new Vector2(0, 0);
 	}
 
 	@Override
@@ -39,29 +41,44 @@ public class ZombieEnemy extends Enemy {
 				if (dy > 0) y = other.y - height;
 				else if (dy < 0) y = other.y + other.height;
 			}
+			intersecting = true;
 		}
 	}
 
 	@Override
 	public void move(long delta) {
-		dx = dy = 0;
+		//dx = dy = 0;
 		if (done) done = false;
 		if (attacking && !done) {
 			attack();
 			return;
 		}
 
-		if (player.x < x) dx = -speed;
+		Vector2 v = Vector2.f(new Point(x + width / 2, x + height / 2), new Point(player.x + player.width / 2, player.y + player.height / 2));
+		Vector2.normalize(v);
+		dir.x += v.x;
+		dir.y += v.y;
+		if (intersecting) {
+			dir.x = (float) (dx * Math.cos(20) - dy * Math.sin(20));
+			dir.y = (float) (dx * Math.sin(20) + dy * Math.cos(20));
+		}
+		Vector2.normalize(dir);
+		dx = (float) dir.x * speed;
+		dy = (float) dir.y * speed;
+		//repulse(game.getObstacle());
+
+		/*if (player.x < x) dx = -speed;
 		else if (player.x > x) dx = speed;
 		if (player.y < y) dy = -speed;
-		else if (player.y > y) dy = speed;
+		else if (player.y > y) dy = speed; */
 		super.move(delta);
+		intersecting = false;
 	}
 
 	public void repulse(SolidEntity obstacle) {
 		Vector2 repulsion = Vector2.getForce(x + width / 2, y + height / 2, obstacle);
-		dx += repulsion.x;
-		dy += repulsion.y;
+		dx += repulsion.x * speed;
+		dy += repulsion.y * speed;
 	}
 
 	/**

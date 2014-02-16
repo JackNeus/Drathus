@@ -20,16 +20,15 @@ public class Vector2 {
 
 	public static Vector2 getForce(float x, float y, SolidEntity obstacle) {
 		double magnitude = obstacle.mass / squareDistanceTo(obstacle, new Point(x, y));
-		System.out.println(magnitude);
 		Vector2 direction = new Vector2(obstacle.x - x, obstacle.y - y);
 		normalize(direction);
 		direction.x *= magnitude;
-		direction.y *= magnitude;
+		direction.y *= -magnitude;
 		return direction;
 	}
 
 	public static double squareDistanceTo(SolidEntity obstacle, Point p) {
 		Vector2 v = f(new Point(obstacle.x + obstacle.width / 2, obstacle.y + obstacle.height / 2), p);
-		return v.x * v.x + v.y + v.y;
+		return v.x * v.x + v.y * v.y;
 	}
 }
